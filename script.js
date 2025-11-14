@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let countdownInterval;
 
-  // --- CORE FUNCTIONS (No changes in this section) ---
+  // --- CORE FUNCTIONS ---
 
   function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
@@ -147,7 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
       link.target = "_blank";
       link.rel = "noopener noreferrer";
 
-      // ⭐ FIXED — absolute URL
       link.href = `${window.location.origin}${window.location.pathname}?id=${matchId}&stream=${encodeURIComponent(channelUrl)}`;
 
       const newTabIcon = `<svg class="new-tab-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>`;
@@ -167,8 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       streamLinksGrid.appendChild(link);
     });
-}
-
+  }
 
   function displayError(title, message) {
     matchTitleEl.textContent = title;
@@ -212,147 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- REFACTORED AND FIXED FEATURE: FLOATING VIDEO PLAYER ---
-  // --- REFACTORED AND FIXED FEATURE: FLOATING VIDEO PLAYER ---
-  function setupFloatingPlayer() {
-    if (!playerContainer) return;
-
-    let isFloatingDisabled = false;
-    let header, closeBtn;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const shouldFloat = !isFloatingDisabled && !entry.isIntersecting && entry.boundingClientRect.top < 0;
-        playerContainer.classList.toggle("floating-player", shouldFloat);
-
-        if (shouldFloat) {
-          attachFloatingUI();
-        } else {
-          removeFloatingUI();
-        }
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(playerContainer);
-
-    function attachFloatingUI() {
-      if (playerContainer.querySelector('.floating-player-header')) return;
-
-      header = document.createElement('div');
-      header.className = 'floating-player-header';
-      header.textContent = 'Drag to Move';
-
-      closeBtn = document.createElement('div');
-      closeBtn.className = 'floating-player-close';
-      closeBtn.innerHTML = `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-
-      closeBtn.addEventListener('click', () => {
-        isFloatingDisabled = true;
-        playerContainer.classList.remove("floating-player");
-        removeFloatingUI();
-      });
-
-      playerContainer.appendChild(header);
-      playerContainer.appendChild(closeBtn);
-
-      header.addEventListener('pointerdown', dragPointerDown);
-      header.addEventListener('pointercancel', cleanupPointer);
-    }
-
-    function removeFloatingUI() {
-      playerContainer.style.left = '';
-      playerContainer.style.top = '';
-      playerContainer.style.right = '';
-      playerContainer.style.bottom = '';
-      playerContainer.style.width = '';
-      playerContainer.style.height = '';
-
-      const existingHeader = playerContainer.querySelector('.floating-player-header');
-      if (existingHeader) existingHeader.remove();
-      const existingCloseBtn = playerContainer.querySelector('.floating-player-close');
-      if (existingCloseBtn) existingCloseBtn.remove();
-      
-      cleanupPointer();
-    }
-
-    let dragging = false;
-    let isTouchDrag = false;
-    let startX = 0, startY = 0;
-    let initialLeft = 0, initialTop = 0;
-    let didDrag = false; // **NEW**: Flag to track if a drag has actually occurred
-
-    function dragPointerDown(e) {
-      if (!playerContainer.classList.contains('floating-player')) return;
-      
-      const pType = e.pointerType || 'mouse';
-      const rect = playerContainer.getBoundingClientRect();
-
-      startX = e.clientX;
-      startY = e.clientY;
-      initialLeft = rect.left;
-      initialTop = rect.top;
-      
-      if (pType === 'mouse') e.preventDefault();
-      
-      if (e.pointerId && header.setPointerCapture) {
-        try { header.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-      }
-
-      dragging = true;
-      isTouchDrag = (pType === 'touch');
-      didDrag = false; // **MODIFIED**: Reset on new pointer down
-
-      document.addEventListener('pointermove', dragPointerMove, { passive: false });
-      document.addEventListener('pointerup', dragPointerUp, { once: true });
-    }
-
-    function dragPointerMove(e) {
-      if (!dragging) return;
-
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-
-      // **MODIFIED**: Check if this is the first move and determine intent
-      if (!didDrag) {
-        // If vertical movement is greater, assume it's a scroll and do nothing.
-        if (isTouchDrag && Math.abs(dy) > Math.abs(dx)) {
-          cleanupPointer(); // Abort the drag
-          return;
-        }
-      }
-      
-      // If we are here, it's a confirmed drag, so prevent default behavior.
-      e.preventDefault();
-      didDrag = true;
-
-      const rect = playerContainer.getBoundingClientRect();
-      const newLeft = Math.max(0, Math.min(initialLeft + dx, window.innerWidth - rect.width));
-      const newTop  = Math.max(0, Math.min(initialTop + dy, window.innerHeight - rect.height));
-      
-      playerContainer.style.left = `${newLeft}px`;
-      playerContainer.style.top = `${newTop}px`;
-      playerContainer.style.right = 'auto';
-      playerContainer.style.bottom = 'auto';
-      playerContainer.style.position = 'fixed';
-    }
-
-    function dragPointerUp(e) {
-      if (e.pointerId && header.releasePointerCapture) {
-        try { header.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-      }
-      cleanupPointer();
-    }
-
-    function cleanupPointer() {
-      dragging = false;
-      isTouchDrag = false;
-      document.removeEventListener('pointermove', dragPointerMove);
-      document.removeEventListener('pointerup', dragPointerUp);
-    }
-  }
-
-
   async function initializePage() {
     try {
       const { matchId, streamUrl } = getUrlParams();
@@ -369,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateMatchStatus(match);
         const channelData = match.channels.channel || match.channels || [];
         renderChannelList(channelData, streamUrl, matchId);
-        setupFloatingPlayer();
       } else {
         displayError("Match Not Found", "The requested match could not be found in the schedule.");
       }
