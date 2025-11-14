@@ -56,15 +56,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  /**
+   * --- THIS IS THE MODIFIED FUNCTION ---
+   * It now correctly finds the match using the new stable, Base64-encoded ID.
+   */
   function findMatchById(apiData, matchId) {
     if (!apiData || !apiData.events) return null;
+    
     for (const date in apiData.events) {
-      for (const [index, event] of apiData.events[date].entries()) {
-        const constructedId = `${event.unix_timestamp}_${index}`;
-        if (constructedId === matchId) return event;
+      const eventsForDay = Array.isArray(apiData.events[date]) ? apiData.events[date] : [apiData.events[date]];
+      
+      for (const event of eventsForDay) {
+        if (event.sport && event.match && event.unix_timestamp) {
+          const uniqueString = `${event.unix_timestamp}_${event.sport}_${event.match}`;
+          // Must use the exact same encoding method as the previous pages
+          const uniqueId = btoa(unescape(encodeURIComponent(uniqueString)));
+
+          if (uniqueId === matchId) {
+            return event; // Found the match
+          }
+        }
       }
     }
-    return null;
+    return null; // Match not found
   }
   
   function updatePageInfo(match) {
@@ -130,48 +144,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   }
 
-  /**
-   * NEW: Function to extract a clean channel name from a URL.
-   * This is taken from your Matchinformation script.
-   */
   function getChannelName(url, index) {
     try {
         const lastPart = url.substring(url.lastIndexOf('/') + 1);
-        // Regex checks for generic names like '12345' or 'ex12345'
         const isGeneric = /^(ex)?\d{3,}$/.test(lastPart);
         if (isGeneric || !lastPart) return `Channel ${index + 1}`;
         return decodeURIComponent(lastPart);
     } catch (e) {
-        // Fallback in case of an error
         return `Channel ${index + 1}`;
     }
   }
   
-  /**
-   * FIXED: This function now renders all available channels from the API.
-   */
   function renderChannelList(channels, currentStreamUrl, matchId) {
-    streamLinksGrid.innerHTML = ""; // Clear placeholders
+    streamLinksGrid.innerHTML = "";
 
     if (!channels || channels.length === 0) {
-      streamLinksGrid.innerHTML = "<p>No stream channels are available for this match.</p>";
+      streamLinksGrid.innerHTML = "<p>No other stream channels are available for this match.</p>";
       return;
     }
 
-    channels.forEach((channelObj, index) => {
-      // Handle cases where the API might return an object or a plain string
-      const channelUrl = typeof channelObj === 'object' ? channelObj.channel : channelObj;
-      if (!channelUrl) return;
+    // This handles both arrays of strings and arrays of objects from the API
+    const channelUrls = channels.map(c => typeof c === 'object' ? c.channel : c).filter(Boolean);
 
+    channelUrls.forEach((channelUrl, index) => {
       const channelName = getChannelName(channelUrl, index);
       const link = document.createElement("a");
       link.className = "stream-link";
       link.href = `?id=${matchId}&stream=${encodeURIComponent(channelUrl)}`;
 
-      const newTabIcon = `<svg class="new-tab-svg" xmlns="http://www.w.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>`;
+      const newTabIcon = `<svg class="new-tab-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>`;
       
       let buttonText = "Switch";
-      // Check if this channel is the one currently playing
       if (channelUrl === currentStreamUrl) {
         link.classList.add("active");
         buttonText = "▶ Running";
@@ -246,8 +249,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (match) {
         updatePageInfo(match);
         updateMatchStatus(match);
-        // FIXED: Pass the channels array, current stream, and match ID to the render function
-        renderChannelList((match.channels || []), streamUrl, matchId);
+        // This makes the channel data more robust, handling different API response structures
+        const channelData = match.channels.channel || match.channels || [];
+        renderChannelList(channelData, streamUrl, matchId);
       } else {
         displayError("Match Not Found", "The requested match could not be found in the schedule.");
       }
