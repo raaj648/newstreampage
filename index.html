@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Match...</title>
+  
+  <link rel="preconnect" href="https://topembed.pw">
+  <link rel="preconnect" href="https://discord.com">
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main>
+    <div class="stream-layout">
+      <!-- Left Column: Ad, Info, Player, Channels -->
+      <div class="stream-main-content">
+        
+        <!-- Ad Placeholder 1 (Moved to Top) -->
+        <div class="ad-placeholder-horizontal">
+            <span>728x90 Advertisement</span>
+        </div>
+
+        <section class="match-info-header">
+          <div class="info-left">
+            <h1 id="match-title">Loading Match Title...</h1>
+            <p id="match-tournament">Fetching details...</p>
+          </div>
+          <div class="info-right">
+            <div id="match-status-badge" class="status-badge loading">Loading</div>
+          </div>
+        </section>
+
+        <section id="countdown-container" class="countdown-container" style="display: none;">
+          <div id="countdown-timer" class="countdown-timer">
+              <div class="time-block"><div id="days" class="time-value">00</div><div class="time-label">Days</div></div>
+              <div class="time-block"><div id="hours" class="time-value">00</div><div class="time-label">Hours</div></div>
+              <div class="time-block"><div id="minutes" class="time-value">00</div><div class="time-label">Minutes</div></div>
+              <div class="time-block"><div id="seconds" class="time-value">00</div><div class="time-label">Seconds</div></div>
+          </div>
+        </section>
+
+        <div class="video-player-container">
+          <iframe id="stream-player" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <section class="channels-section">
+            <div class="channels-header">
+                <h2>Available Channels</h2>
+                <p>Match Start Time: <span id="match-start-time">--:-- --</span></p>
+            </div>
+            <div id="stream-links-grid" class="stream-links-grid">
+                <!-- Channel links will be injected here -->
+                <div class="placeholder-stream-link"></div>
+                <div class="placeholder-stream-link"></div>
+                <div class="placeholder-stream-link"></div>
+            </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Discord and Ads -->
+      <aside class="sidebar-content">
+        
+        <!-- Discord Widget (Moved Up & Reverted) -->
+        <div id="discord-widget-container">
+          <div class="discord-header">
+              <div class="header-text">
+                  <h3>Join our <span>Discord!</span></h3>
+                  <p><span id="discord-online-count">...</span> online members</p>
+              </div>
+              <a href="#" id="discord-join-button" class="discord-btn" target="_blank" rel="noopener noreferrer nofollow">Join Now</a>
+          </div>
+          <ul id="discord-members-list" class="members-list">
+              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
+              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
+              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
+              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
+              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
+          </ul>
+        </div>
+        
+        <!-- Ad Placeholder 2 -->
+        <div class="ad-placeholder-vertical">
+            <span>300x600 Advertisement</span>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="partners-section">
+      <h3>Our Network</h3>
+      <div class="partners-grid">
+        <a href="#" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Partner Site 1</span></a>
+        <a href="#" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Partner Site 2</span></a>
+        <a href="#" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Partner Site 3</span></a>
+        <a href="#" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Partner Site 4</span></a>
+      </div>
+    </div>
+    <p class="copyright">© 2025 Streameast V2. All rights reserved.</p>
+  </footer>
+
+  <div id="sticky-footer-ad">
+    <div class="ad-content">
+        <span class="emoji">📲</span>
+        <span class="cta-text">Get the App!</span>
+        <a href="https://tinyurl.com/methstreamsapp" class="download-btn" rel="nofollow" target="_blank">⬇ Download</a>
+    </div>
+    <span id="close-ad">&#10060;</span>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
