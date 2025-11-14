@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // If no cache or cache is expired, fetch new data
     try {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error("API request failed");
@@ -75,15 +74,27 @@ document.addEventListener("DOMContentLoaded", () => {
     pageTitle.textContent = title;
     matchTitleEl.textContent = match.match;
     matchTournamentEl.textContent = match.tournament;
-    const startTime = new Date(match.unix_timestamp * 1000);
+    const startTime = new Date(parseInt(match.unix_timestamp, 10) * 1000);
     matchStartTimeEl.textContent = startTime.toLocaleString('en-US', { dateStyle: 'medium', hour: 'numeric', minute: 'numeric', hour12: true });
   }
 
+  /**
+   * FIXED: Ensures unix_timestamp is treated as a number to prevent logic errors.
+   */
   function updateMatchStatus(match) {
     const now = Math.floor(Date.now() / 1000);
-    const startTime = match.unix_timestamp;
+    // Use parseInt to guarantee the timestamp is a number for correct calculations
+    const startTime = parseInt(match.unix_timestamp, 10);
+
+    if (isNaN(startTime)) {
+        console.error("Invalid start time for match:", match);
+        matchStatusBadge.textContent = "Error";
+        matchStatusBadge.className = "status-badge finished"; // Use a neutral color for error
+        return;
+    }
+
     const timeDiffMinutes = (now - startTime) / 60;
-    if (timeDiffMinutes >= 0 && timeDiffMinutes < 150) {
+    if (timeDiffMinutes >= 0 && timeDiffMinutes < 150) { // Assuming match duration of 2.5 hours
       matchStatusBadge.textContent = "Live";
       matchStatusBadge.className = "status-badge live";
       countdownContainer.style.display = "none";
@@ -98,9 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /**
-   * OPTIMIZED: Replaced inefficient 'eval' with a direct and safe variable mapping.
-   */
   function startCountdown(targetTimestamp) {
     countdownContainer.style.display = "block";
     countdownInterval = setInterval(() => {
@@ -108,19 +116,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const diff = targetTimestamp - now;
       if (diff <= 0) {
         clearInterval(countdownInterval);
-        location.reload();
+        location.reload(); // Reload page to update status from "Upcoming" to "Live"
         return;
       }
-      const d = Math.floor(diff / (3600 * 24));
-      const h = Math.floor(diff % (3600 * 24) / 3600);
-      const m = Math.floor(diff % 3600 / 60);
-      const s = Math.floor(diff % 60);
-      
-      // Safer and faster way to update elements
-      document.getElementById("days").textContent = d.toString().padStart(2, '0');
-      document.getElementById("hours").textContent = h.toString().padStart(2, '0');
-      document.getElementById("minutes").textContent = m.toString().padStart(2, '0');
-      document.getElementById("seconds").textContent = s.toString().padStart(2, '0');
+      document.getElementById("days").textContent = Math.floor(diff / (3600 * 24)).toString().padStart(2, '0');
+      document.getElementById("hours").textContent = Math.floor(diff % (3600 * 24) / 3600).toString().padStart(2, '0');
+      document.getElementById("minutes").textContent = Math.floor(diff % 3600 / 60).toString().padStart(2, '0');
+      document.getElementById("seconds").textContent = Math.floor(diff % 60).toString().padStart(2, '0');
     }, 1000);
   }
 
@@ -170,14 +172,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayError(title, message) {
     matchTitleEl.textContent = title;
     matchTournamentEl.textContent = message;
-    document.querySelector('.stream-main-content').innerHTML = `<h1 style="text-align:center;">${title}</h1><p style="text-align: center;">${message}</p>`;
+    matchStatusBadge.textContent = "Error";
+    matchStatusBadge.className = "status-badge finished";
+    document.querySelector('.video-player-container').style.display = 'none';
+    streamLinksGrid.innerHTML = `<p style="text-align: center;">${message}. Please try another match.</p>`;
   }
 
   async function loadDiscordWidget() {
     if (!DISCORD_SERVER_ID) return;
-    const apiUrl = `https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`;
     try {
-      const response = await fetch(apiUrl);
+      const response = await fetch(`https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`);
       if (!response.ok) throw new Error('Failed to fetch Discord data');
       const data = await response.json();
       
@@ -203,19 +207,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (error) {
       console.error("Error loading Discord widget:", error);
-      document.getElementById("discord-widget-container").innerHTML = '<p>Could not load Discord widget.</p>';
+      document.getElementById("discord-widget-container").style.display = 'none';
     }
   }
 
   /**
-   * OPTIMIZED: Main function now runs network requests in parallel.
+   * OPTIMIZED: Main function now runs network requests in parallel for speed.
    */
   async function initializePage() {
     try {
       const { matchId, streamUrl } = getUrlParams();
       streamPlayer.src = streamUrl;
 
-      // Run API and Discord fetches at the same time
+      // Run API and Discord fetches at the same time for a much faster load
       const [apiData] = await Promise.all([
         fetchAndCacheApiData(),
         loadDiscordWidget() 
@@ -223,11 +227,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const match = findMatchById(apiData, matchId);
       if (match) {
+        // Run all updates now that we have valid match data
         updatePageInfo(match);
         updateMatchStatus(match);
         renderChannelList((match.channels || []), streamUrl, matchId);
       } else {
-        displayError("Match Not Found", "The requested match could not be found.");
+        displayError("Match Not Found", "The requested match could not be found");
       }
     } catch (error) {
       console.error("Page initialization failed:", error);
