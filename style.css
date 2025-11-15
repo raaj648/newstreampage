@@ -89,7 +89,21 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
 .copyright { text-align: center; margin-top: 2rem; color: #888; font-size: 0.9rem; padding-bottom: 60px; }
 
 /* ====== STICKY FOOTER AD ====== */
-#sticky-footer-ad { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(270deg, #ff5e00, #ff8c00, #ff5e00); background-size: 600% 600%; animation: gradientShift 8s ease infinite; padding: 10px; z-index: 999; display: flex; justify-content: center; align-items: center; box-shadow: 0 -3px 10px rgba(0,0,0,0.4); }
+#sticky-footer-ad {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(270deg, #ff5e00, #ff8c00, #ff5e00);
+  background-size: 600% 600%;
+  animation: gradientShift 8s ease infinite;
+  padding: 10px;
+  z-index: 999;
+  display: none; /* UPDATED: Hide by default on desktop */
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -3px 10px rgba(0,0,0,0.4);
+}
 .ad-content { display: flex; align-items: center; gap: 8px; }
 .emoji { font-size: 24px; }
 .cta-text { font-size: 16px; font-weight: bold; }
@@ -111,4 +125,8 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
   .sidebar-content { grid-template-columns: 1fr; }
   #discord-widget-container { margin-bottom: 1.5rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; }
+  
+  #sticky-footer-ad {
+      display: flex; /* UPDATED: Show the ad on mobile devices */
+  }
 }
