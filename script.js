@@ -15,8 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
         countdownContainer = document.getElementById("countdown-container"),
         matchStartTimeEl = document.getElementById("match-start-time"),
         streamLinksGrid = document.getElementById("stream-links-grid"),
+        // Ad Elements
         closeAdBtn = document.getElementById("close-ad"),
-        stickyAd = document.getElementById("sticky-footer-ad");
+        stickyAd = document.getElementById("sticky-footer-ad"),
+        closeDesktopAdBtn = document.getElementById("close-desktop-ad"),
+        desktopStickyAd = document.getElementById("desktop-sticky-ad");
 
   let countdownInterval;
 
@@ -210,8 +213,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function setupAdEventListeners() {
+    // Mobile Ad
+    if (closeAdBtn && stickyAd) {
+      closeAdBtn.addEventListener("click", () => { 
+        stickyAd.style.display = "none"; 
+      });
+    }
+    // Desktop Ad
+    if (closeDesktopAdBtn && desktopStickyAd) {
+      closeDesktopAdBtn.addEventListener("click", () => {
+        desktopStickyAd.style.display = "none";
+      });
+    }
+  }
+
   async function initializePage() {
     try {
+      setupAdEventListeners(); // Set up ad close buttons
       const { matchId, streamUrl } = getUrlParams();
       streamPlayer.src = streamUrl;
 
@@ -232,12 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Page initialization failed:", error);
     }
-  }
-
-  if (closeAdBtn && stickyAd) {
-    closeAdBtn.addEventListener("click", () => { 
-      stickyAd.style.display = "none"; 
-    });
   }
 
   initializePage();
