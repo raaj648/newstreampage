@@ -88,27 +88,60 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
 .partner-card:hover .partner-name { color: #ff8c00; }
 .copyright { text-align: center; margin-top: 2rem; color: #888; font-size: 0.9rem; padding-bottom: 60px; }
 
-/* ====== STICKY FOOTER AD ====== */
-#sticky-footer-ad {
+/* ====== STICKY FOOTER ADS ====== */
+#sticky-footer-ad, #desktop-sticky-ad {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(270deg, #ff5e00, #ff8c00, #ff5e00);
-  background-size: 600% 600%;
-  animation: gradientShift 8s ease infinite;
-  padding: 10px;
+  padding: 10px 50px 10px 10px; /* Added padding to prevent content overlap with close button */
   z-index: 999;
-  display: none; /* UPDATED: Hide by default on desktop */
   justify-content: center;
   align-items: center;
   box-shadow: 0 -3px 10px rgba(0,0,0,0.4);
+  box-sizing: border-box;
 }
-.ad-content { display: flex; align-items: center; gap: 8px; }
+
+/* Mobile-only Ad */
+#sticky-footer-ad {
+  background: linear-gradient(270deg, #ff5e00, #ff8c00, #ff5e00);
+  background-size: 600% 600%;
+  animation: gradientShift 8s ease infinite;
+  display: none; /* Hidden by default */
+}
+
+/* Desktop-only Ad */
+#desktop-sticky-ad {
+  background-color: #1a1a2e;
+  border-top: 2px solid #5865F2; /* Discord blue accent */
+  color: #fff;
+  display: flex; /* Visible by default */
+}
+#desktop-sticky-ad .download-btn {
+    background-color: #5865F2;
+}
+
+.ad-content { display: flex; align-items: center; gap: 15px; }
 .emoji { font-size: 24px; }
 .cta-text { font-size: 16px; font-weight: bold; }
 .download-btn { background: #111; color: #fff; padding: 8px 20px; border-radius: 25px; font-size: 16px; font-weight: bold; text-decoration: none; }
-#close-ad { position: absolute; top: 3px; right: 25px; font-size: 14px; padding: 5px; border-radius: 50%; background: #333; cursor: pointer; }
+
+.close-ad-btn {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.close-ad-btn:hover {
+    transform: translateY(-50%) scale(1.2);
+}
+
 @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
 /* ====== RESPONSIVE DESIGN ====== */
@@ -126,7 +159,11 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
   #discord-widget-container { margin-bottom: 1.5rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; }
   
+  /* Show mobile ad and hide desktop ad */
   #sticky-footer-ad {
-      display: flex; /* UPDATED: Show the ad on mobile devices */
+      display: flex;
+  }
+  #desktop-sticky-ad {
+      display: none;
   }
 }
