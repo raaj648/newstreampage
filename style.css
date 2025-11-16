@@ -158,7 +158,8 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
   .sidebar-content { grid-template-columns: 1fr; }
   #discord-widget-container { margin-bottom: 1.5rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; }
-  
+  .ad-placeholder-horizontal img {max-width: 340px}
+  .ad-placeholder-horizontal {max-width: 350px}
   /* Show mobile ad and hide desktop ad */
   #sticky-footer-ad {
       display: flex;
@@ -167,3 +168,4 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
       display: none;
   }
 }
+
