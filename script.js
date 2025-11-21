@@ -279,9 +279,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const channelName = getChannelName(channelUrl, index);
       const link = document.createElement("a");
       link.className = "stream-link";
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.href = `${window.location.origin}${window.location.pathname}?id=${matchId}&stream=${encodeURIComponent(channelUrl)}`;
+      link.href = "javascript:void(0)";
+link.addEventListener("click", () => {
+    streamPlayer.src = channelUrl;   // Refresh only the video player
+});
+
 
       let buttonText = "Switch";
       if (channelUrl === currentStreamUrl) {
@@ -383,5 +385,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
 
 
