@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
         "https://amzn.to/44dBQJe"
     ],
     "CA": [
-        "https://amzn.to/44dBQJe"
+        "https://record.betsson.com/_Ipto0Q-i5zSwcAgXsjz1uGNd7ZgqdRLk/1/",
+        "https://record.betsson.com/_Ipto0Q-i5zSMxelRx-4u3GNd7ZgqdRLk/1/",
+        "https://record.betsson.com/_Ipto0Q-i5zQMGjCE5hF4R2Nd7ZgqdRLk/1/"
     ],
     "BR": [
         "https://1wksrw.com/?open=register&p=h8zt"
@@ -381,5 +383,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
 
 
