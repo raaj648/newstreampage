@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // PART B: Cross-Border Rules
   const CROSS_BORDER_RULES = {
     "https://1wksrw.com/betting?open=register&p=xctu": ["BR", "RU", "IN"], // This link also works in Brazil, Russia, India 
-    "https://1wksrw.com/?open=register&p=h8zt": ["BD", "PH", "AR"]  // This link also works in Bangladesh, Philipines, Argentina
+    "https://1wksrw.com/?open=register&p=h8zt": ["BD", "PH", "AR"],  // This link also works in Bangladesh, Philipines, Argentina
+    "https://record.betsson.com/_Ipto0Q-i5zR7HLc7-ZUbAGNd7ZgqdRLk/1/": ["BD", "AR", "BR", "CO", "GR"]
   };
 
   // --- NEW: HIGH TRAFFIC GEO-DETECTION (CLOUDFLARE METHOD) ---
@@ -382,3 +383,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
