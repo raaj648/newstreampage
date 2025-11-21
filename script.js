@@ -7,16 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // PART A: Base Lists per Country
   const OFFERS_BY_COUNTRY = {
     "US": [
-        "https://offer1.com/usa", 
-        "https://offer2.com/usa", 
-        "https://offer3.com/usa"
+        "https://amzn.to/44dBQJe", 
+        "https://amzn.to/44dBQJe", 
+        "https://amzn.to/44dBQJe"
     ],
     "GB": [
-        "https://offer1.com/uk", 
-        "https://offer2.com/uk"
+        "https://amzn.to/44dBQJe", 
+        "https://amzn.to/44dBQJe"
     ],
     "CA": [
-        "https://offer1.com/ca"
+        "https://amzn.to/44dBQJe"
     ],
     "BR": [
         "https://1wksrw.com/?open=register&p=h8zt"
@@ -382,3 +382,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
