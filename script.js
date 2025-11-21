@@ -276,48 +276,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const channelUrls = channels.map(c => typeof c === 'object' ? c.channel : c).filter(Boolean);
 
     channelUrls.forEach((channelUrl, index) => {
+      const channelName = getChannelName(channelUrl, index);
+      const link = document.createElement("a");
+      link.className = "stream-link";
+      link.href = `${window.location.origin}${window.location.pathname}?id=${matchId}&stream=${encodeURIComponent(channelUrl)}`;
 
-    const channelName = getChannelName(channelUrl, index);
-    const link = document.createElement("a");
-    link.className = "stream-link-btn";
-    link.href = "#";
+      let buttonText = "Switch";
+      if (channelUrl === currentStreamUrl) {
+        link.classList.add("active");
+        buttonText = "Running";
+      }
 
-    // Set button text
-    let buttonText = (channelUrl === currentStreamUrl) ? "Running" : "Watch";
-
-    // Initial running state
-    if (channelUrl === currentStreamUrl) {
-        link.classList.add("running");
-    }
-
-    link.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        document.querySelectorAll(".stream-link-btn").forEach(btn => {
-            btn.classList.remove("running");
-            btn.classList.remove("switching");
-        });
-
-        link.classList.add("switching");
-
-        streamPlayer.src = channelUrl;
-
-        streamPlayer.onload = () => {
-            link.classList.remove("switching");
-            link.classList.add("running");
-        };
-    });
-
-    link.innerHTML = `
+      link.innerHTML = `
         <div class="stream-link-content">
           <span class="stream-info">${channelName}</span>
           <span class="watch-now-btn">${buttonText}</span>
         </div>
-    `;
-
-    streamLinksGrid.appendChild(link);
-});
-
+      `;
+      streamLinksGrid.appendChild(link);
+    });
+  }
 
   function displayError(title, message) {
     matchTitleEl.textContent = title;
@@ -391,8 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (match) {
         updatePageInfo(match);
         updateMatchStatus(match);
-        const channelData = match.channels?.channel || match.channels || [];
-
+        const channelData = match.channels.channel || match.channels || [];
         renderChannelList(channelData, streamUrl, matchId);
       } else {
         displayError("Match Not Found", "The requested match could not be found.");
@@ -404,8 +381,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
-
-
-
 
 
