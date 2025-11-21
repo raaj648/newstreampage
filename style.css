@@ -82,9 +82,18 @@ main { padding: 1.5rem 1rem; }
 
 /* ====== NATIVE ADS ====== */
 /* Server Selector */
-.server-selector-container { background: var(--bg-secondary); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 15px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-.server-label { font-size: 11px; font-weight: bold; color: var(--text-secondary); }
-.srv-btn { padding: 6px 12px; border-radius: 4px; border: none; font-size: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; color: #fff;}
+.server-selector-container {
+    background: var(--bg-secondary); padding: 10px; border-radius: 8px;
+    border: 1px solid var(--border-color); margin-bottom: 15px;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+.server-label { font-size: 11px; font-weight: bold; color: var(--text-secondary); white-space: nowrap; }
+.server-options { display: flex; gap: 8px; flex-wrap: wrap; flex-grow: 1; }
+.srv-btn {
+    padding: 8px 12px; border-radius: 6px; border: none; font-size: 12px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+    gap: 5px; cursor: pointer; color: #fff; white-space: nowrap; flex-grow: 1; text-align: center;
+}
 .srv-btn.active { background: var(--accent-green); pointer-events: none; }
 .srv-btn.premium { background: #1f1f1f; border: 1px solid #444; transition: 0.2s; }
 .srv-btn.premium:hover { background: var(--accent-blue); border-color: var(--accent-blue); }
@@ -191,3 +200,4 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
   #sticky-footer-ad { display: flex; }
   #desktop-sticky-ad { display: none; }
 }
+
