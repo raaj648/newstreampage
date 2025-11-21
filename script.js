@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Format: "Link URL": ["CountryCode1", "CountryCode2"]
   const CROSS_BORDER_RULES = {
     "https://offer3.com/usa": ["BR", "PE", "CO"], // This US link also works in Brazil, Peru, Colombia
-    "https://offer1.com/ca": ["FR", "BE"]         // This Canada link also works in France, Belgium
+    "https://offer1.com/ca": ["FR", "BE", "US"]         // This Canada link also works in France, Belgium
   };
 
   async function getSmartAffiliateLink() {
