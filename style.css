@@ -201,43 +201,4 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
   #desktop-sticky-ad { display: none; }
 }
 
-/* ====== CHANNEL BUTTON STATES ====== */
-
-/* Base design of channel button */
-.stream-link-btn {
-    display: block;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    padding: 12px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    transition: 0.3s;
-    cursor: pointer;
-}
-
-/* Hover effect */
-.stream-link-btn:hover {
-    background: #222;
-    border-color: var(--accent-blue);
-}
-
-/* When a channel is actively playing */
-.stream-link-btn.running {
-    background: var(--accent-green) !important;
-    border-color: var(--accent-green) !important;
-    color: #000 !important;
-    pointer-events: none;
-}
-
-/* When switching/loading */
-.stream-link-btn.switching {
-    background: #444 !important;
-    border-color: #777 !important;
-    color: #ccc !important;
-    pointer-events: none;
-}
-
 
