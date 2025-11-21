@@ -382,4 +382,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
-
