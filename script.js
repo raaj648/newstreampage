@@ -279,10 +279,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const channelName = getChannelName(channelUrl, index);
       const link = document.createElement("a");
       link.className = "stream-link";
-      link.href = "javascript:void(0)";
-link.addEventListener("click", () => {
-    streamPlayer.src = channelUrl;   // Refresh only the video player
+    link.href = "#";
+link.addEventListener("click", (e) => {
+    e.preventDefault();
+    streamPlayer.src = channelUrl;
 });
+
+
 
 
       let buttonText = "Switch";
@@ -373,7 +376,8 @@ link.addEventListener("click", () => {
       if (match) {
         updatePageInfo(match);
         updateMatchStatus(match);
-        const channelData = match.channels.channel || match.channels || [];
+        const channelData = match.channels?.channel || match.channels || [];
+
         renderChannelList(channelData, streamUrl, matchId);
       } else {
         displayError("Match Not Found", "The requested match could not be found.");
@@ -385,6 +389,7 @@ link.addEventListener("click", () => {
 
   initializePage();
 });
+
 
 
 
