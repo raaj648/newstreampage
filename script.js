@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==================================================
 
   // PART A: Base Lists per Country
-  // If a user is from "US", they get randomly assigned one of these.
   const OFFERS_BY_COUNTRY = {
     "US": [
         "https://offer1.com/usa", 
@@ -20,59 +19,82 @@ document.addEventListener("DOMContentLoaded", () => {
         "https://offer1.com/ca"
     ],
     "BR": [
-        "https://offer-brazil-local.com"
+        "https://1wksrw.com/?open=register&p=h8zt"
     ],
+    // Fallback for everyone else
     "Global": [
-        "https://smart-link-global.com",
-		"https://smart-link-global2.com",
-		"https://smart-link-global3.com"
+        "https://1wksrw.com/betting?open=register&p=xctu",
+        "https://1wksrw.com/?open=register&p=h8zt"
     ]
   };
 
   // PART B: Cross-Border Rules
-  // Specific links that can ALSO work in other countries.
-  // Format: "Link URL": ["CountryCode1", "CountryCode2"]
   const CROSS_BORDER_RULES = {
-    "https://offer3.com/usa": ["BR", "PE", "CO"], // This US link also works in Brazil, Peru, Colombia
-    "https://offer1.com/ca": ["FR", "BE", "US"]         // This Canada link also works in France, Belgium
+    "https://1wksrw.com/betting?open=register&p=xctu": ["BR", "RU", "IN"], // This link also works in Brazil, Russia, India 
+    "https://1wksrw.com/?open=register&p=h8zt": ["BD", "PH", "AR"]  // This link also works in Bangladesh, Philipines, Argentina
   };
 
-  async function getSmartAffiliateLink() {
-    let userCountry = "Global"; 
-
-    // 1. Detect Country
+  // --- NEW: HIGH TRAFFIC GEO-DETECTION (CLOUDFLARE METHOD) ---
+  async function getHighTrafficCountry() {
     try {
-      const res = await fetch('https://ipapi.co/json/');
-      const data = await res.json();
-      if(data && data.country_code) {
-        userCountry = data.country_code.toUpperCase(); // e.g., "US", "BR"
-      }
+        // Method 1: Cloudflare Trace (Unlimited, Fast, Free)
+        // This works because Cloudflare exposes this text file on their edge nodes.
+        const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
+        const text = await response.text();
+        
+        // Parse the text response which looks like "h=... ip=... loc=US ..."
+        const data = text.trim().split('\n').reduce(function(obj, pair) {
+            const parts = pair.split('=');
+            obj[parts[0]] = parts[1];
+            return obj;
+        }, {});
+
+        if (data.loc) {
+            return data.loc.toUpperCase(); // Returns "US", "BD", "GB" etc.
+        }
     } catch (e) {
-      console.log("Geo-detection failed, defaulting to Global.");
+        console.warn("Cloudflare trace failed, trying backup...");
     }
 
-    // 2. Build the Pool of Available Links for this Country
+    // Method 2: Backup (GeoJS - lighter weight than ipapi)
+    try {
+        const res = await fetch('https://get.geojs.io/v1/ip/country.json');
+        const data = await res.json();
+        if(data.country) return data.country.toUpperCase();
+    } catch (e) {
+        console.error("All Geo methods failed.");
+    }
+
+    return "Global";
+  }
+
+  async function getSmartAffiliateLink() {
+    // 1. Detect Country using High-Traffic Method
+    let userCountry = await getHighTrafficCountry();
+    
+    // console.log("Detected Country:", userCountry); // Un-comment to test
+
+    // 2. Build the Pool of Available Links
     let linkPool = [];
 
-    // A. Add Local Offers if they exist
+    // A. Add Local Offers
     if (OFFERS_BY_COUNTRY[userCountry]) {
         linkPool = linkPool.concat(OFFERS_BY_COUNTRY[userCountry]);
     }
 
     // B. Check Cross-Border Rules
-    // If the detected country is in the list for a specific link, add that link to the pool
     for (const [linkUrl, allowedCountries] of Object.entries(CROSS_BORDER_RULES)) {
         if (allowedCountries.includes(userCountry)) {
             linkPool.push(linkUrl);
         }
     }
 
-    // C. Fallback if pool is empty -> Use Global List
+    // C. Fallback to Global
     if (linkPool.length === 0) {
         linkPool = OFFERS_BY_COUNTRY["Global"];
     }
 
-    // 3. Select Random Link from the Pool
+    // 3. Select Random Link
     const randomIndex = Math.floor(Math.random() * linkPool.length);
     return linkPool[randomIndex];
   }
@@ -81,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const finalLink = await getSmartAffiliateLink();
     window.currentAffiliateLink = finalLink; // Store for In-Feed Ad
 
-    // Update all dynamic elements (EXCEPT FOOTER)
+    // Update all dynamic elements
     const adElements = document.querySelectorAll('.dynamic-affiliate-link');
     adElements.forEach(el => {
         el.href = finalLink;
