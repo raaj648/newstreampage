@@ -276,33 +276,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const channelUrls = channels.map(c => typeof c === 'object' ? c.channel : c).filter(Boolean);
 
     channelUrls.forEach((channelUrl, index) => {
-      const channelName = getChannelName(channelUrl, index);
-      const link = document.createElement("a");
-      link.className = "stream-link";
+
+    const channelName = getChannelName(channelUrl, index);
+    const link = document.createElement("a");
+    link.className = "stream-link-btn";
     link.href = "#";
-link.addEventListener("click", (e) => {
-    e.preventDefault();
-    streamPlayer.src = channelUrl;
-});
 
+    // Set button text
+    let buttonText = (channelUrl === currentStreamUrl) ? "Running" : "Watch";
 
+    // Initial running state
+    if (channelUrl === currentStreamUrl) {
+        link.classList.add("running");
+    }
 
+    link.addEventListener("click", (e) => {
+        e.preventDefault();
 
-      let buttonText = "Switch";
-      if (channelUrl === currentStreamUrl) {
-        link.classList.add("active");
-        buttonText = "Running";
-      }
+        document.querySelectorAll(".stream-link-btn").forEach(btn => {
+            btn.classList.remove("running");
+            btn.classList.remove("switching");
+        });
 
-      link.innerHTML = `
+        link.classList.add("switching");
+
+        streamPlayer.src = channelUrl;
+
+        streamPlayer.onload = () => {
+            link.classList.remove("switching");
+            link.classList.add("running");
+        };
+    });
+
+    link.innerHTML = `
         <div class="stream-link-content">
           <span class="stream-info">${channelName}</span>
           <span class="watch-now-btn">${buttonText}</span>
         </div>
-      `;
-      streamLinksGrid.appendChild(link);
-    });
-  }
+    `;
+
+    streamLinksGrid.appendChild(link);
+});
+
 
   function displayError(title, message) {
     matchTitleEl.textContent = title;
@@ -389,6 +404,7 @@ link.addEventListener("click", (e) => {
 
   initializePage();
 });
+
 
 
 
