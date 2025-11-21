@@ -8,15 +8,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const OFFERS_BY_COUNTRY = {
     "US": [
         "https://amzn.to/44dBQJe", 
-        "https://amzn.to/44dBQJe", 
-        "https://amzn.to/44dBQJe"
+        "https://amzn.to/55555", 
+        "https://amzn.to/8888"
     ],
     "GB": [
         "https://amzn.to/44dBQJe", 
-        "https://amzn.to/44dBQJe"
+        "https://amzn.to/999"
     ],
     "CA": [
-        "https://amzn.to/44dBQJe"
+        "https://amzn.to/441111"
     ],
     "BR": [
         "https://1wksrw.com/?open=register&p=h8zt"
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const CROSS_BORDER_RULES = {
     "https://1wksrw.com/betting?open=register&p=xctu": ["BR", "RU", "IN"], // This link also works in Brazil, Russia, India 
     "https://1wksrw.com/?open=register&p=h8zt": ["BD", "PH", "AR"],  // This link also works in Bangladesh, Philipines, Argentina
-    "https://record.betsson.com/_Ipto0Q-i5zR7HLc7-ZUbAGNd7ZgqdRLk/1/": ["AR", "BR", "CO", "GR"]
+    "https://record.betsson.com/_Ipto0Q-i5zR7HLc7-ZUbAGNd7ZgqdRLk/1/": ["AR", "BR", "CO", "GR", "BD"]
   };
 
   // --- NEW: HIGH TRAFFIC GEO-DETECTION (GITHUB PAGES OPTIMIZED - OPTION A) ---
@@ -381,3 +381,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
