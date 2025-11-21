@@ -7,6 +7,9 @@
   
   <link rel="preconnect" href="https://topembed.pw">
   <link rel="preconnect" href="https://discord.com">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   
@@ -14,16 +17,25 @@
 </head>
 <body>
 
+  <!-- REVENUE HEADER -->
+  <div class="site-header">
+    <div class="header-brand">
+      <i class="fa-solid fa-play-circle"></i><span class="text-highlight">HD</span>Stream
+    </div>
+    <div class="header-cta">
+      <a href="#" class="vip-btn dynamic-affiliate-link">
+        <i class="fa-solid fa-crown"></i> VIP Access (No Ads)
+      </a>
+    </div>
+  </div>
+
   <main>
     <div class="stream-layout">
-      <!-- Left Column: Ad, Info, Player, Channels -->
+      
+      <!-- Left Column: Content & Player -->
       <div class="stream-main-content">
         
-        <!-- Ad Placeholder 1 (Top of Content) -->
-        <div class="ad-placeholder-horizontal">
-            <a href="https://amzn.to/3JDrf3v" target="_blank" rel="nofollow noopener sponsored"><img src="https://raaj648.github.io/newstreampage/amazonhorizontal.webp"/></a>
-        </div>
-
+        <!-- Match Info (Title) -->
         <section class="match-info-header">
           <div class="info-left">
             <h1 id="match-title">Loading Match Title...</h1>
@@ -33,8 +45,8 @@
             <div id="match-status-badge" class="status-badge loading">Loading</div>
           </div>
         </section>
-
-        <section id="countdown-container" class="countdown-container" style="display: none;">
+		
+		<section id="countdown-container" class="countdown-container" style="display: none;">
           <div id="countdown-timer" class="countdown-timer">
               <div class="time-block"><div id="days" class="time-value">00</div><div class="time-label">Days</div></div>
               <div class="time-block"><div id="hours" class="time-value">00</div><div class="time-label">Hours</div></div>
@@ -43,13 +55,59 @@
           </div>
         </section>
 
-        <!-- Ad Placeholder 2 (Above Player) -->
-        <div class="ad-placeholder-horizontal" style="margin-bottom: 1.5rem;">
-            <a href="https://amzn.to/3JDrf3v" target="_blank" rel="nofollow noopener sponsored"><img src="https://raaj648.github.io/newstreampage/amazonhorizontal.webp"/></a>
+        <!-- [AD 1] Native Server Selector -->
+        <div class="server-selector-container">
+            <div class="server-label"><i class="fa-solid fa-server"></i> SELECT SERVER:</div>
+            <div class="server-options">
+                <button class="srv-btn active"><i class="fa-solid fa-play"></i> SD Stream</button>
+                <a href="#" target="_blank" class="srv-btn premium dynamic-affiliate-link">
+                    <i class="fa-solid fa-bolt"></i> HD Server (Fast)
+                </a>
+                <a href="#" target="_blank" class="srv-btn premium gold dynamic-affiliate-link">
+                    <i class="fa-solid fa-star"></i> VIP 4K
+                </a>
+            </div>
         </div>
 
+        
+
         <div class="video-player-container">
+          <!-- [AD 2] Video Overlay Gatekeeper -->
+          <div id="video-overlay-ad" class="video-overlay">
+            <div class="overlay-content">
+                <div class="play-button-pulse">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <p>Click to Start Stream</p>
+            </div>
+          </div>
+
+          <!-- YOUR ORIGINAL PLAYER -->
           <iframe id="stream-player" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <!-- [AD 3] Live Odds Bar -->
+        <div class="live-odds-wrapper">
+            <div class="odds-header">
+                <span class="live-dot"></span> <span>LIVE ODDS</span>
+            </div>
+            <div class="odds-grid">
+                <a href="#" target="_blank" class="odds-item dynamic-affiliate-link">
+                    <span class="team-label">Home</span>
+                    <span class="odds-value">2.15</span>
+                </a>
+                <a href="#" target="_blank" class="odds-item draw dynamic-affiliate-link">
+                    <span class="team-label">Draw</span>
+                    <span class="odds-value">3.40</span>
+                </a>
+                <a href="#" target="_blank" class="odds-item dynamic-affiliate-link">
+                    <span class="team-label">Away</span>
+                    <span class="odds-value">2.90</span>
+                </a>
+            </div>
+            <a href="#" target="_blank" class="odds-cta dynamic-affiliate-link">
+                <i class="fa-solid fa-gift"></i> Claim $500 Welcome Bonus &raquo;
+            </a>
         </div>
 
         <section class="channels-section">
@@ -58,76 +116,84 @@
                 <p>Match Start Time: <span id="match-start-time">--:-- --</span></p>
             </div>
             <div id="stream-links-grid" class="stream-links-grid">
+                <!-- [AD 4] IN-FEED AD (Injected via JS) -->
                 <!-- Channel links will be injected here -->
-                <div class="placeholder-stream-link"></div>
                 <div class="placeholder-stream-link"></div>
                 <div class="placeholder-stream-link"></div>
             </div>
         </section>
 
-        <!-- Ad Placeholder 3 (After Channels) -->
-        <div class="ad-placeholder-horizontal" style="margin-top: 1.5rem;">
-            <a href="https://amzn.to/3JDrf3v" target="_blank" rel="nofollow noopener sponsored"><img src="https://raaj648.github.io/newstreampage/amazonhorizontal.webp"/></a>
-        </div>
-
       </div>
 
-      <!-- Right Column: Discord and Ads -->
+      <!-- Right Column: Sidebar (Sticky) -->
       <aside class="sidebar-content">
         
+        <!-- [AD 5] GREEDY SIDEBAR AD -->
+        <a href="#" target="_blank" class="side-by-side-ad dynamic-affiliate-link">
+            <div class="ad-neon-border"></div>
+            <div class="ad-header">
+                <span class="blink-text">● LIVE</span> JACKPOT
+            </div>
+            <div class="ad-body">
+                <div class="jackpot-amount">$14,290.55</div>
+                <div class="ad-promo-text">Don't just watch. <span>WIN!</span></div>
+                <button class="ad-cta-btn">BET NOW</button>
+            </div>
+            <div class="ad-footer">
+                <img src="check.png" alt="Sponsor">
+                <span>Official Partner</span>
+            </div>
+        </a>
+
         <!-- Discord Widget -->
         <div id="discord-widget-container">
           <div class="discord-header">
               <div class="header-text">
-                  <h3>Join our <span>Discord!</span></h3>
-                  <p><span id="discord-online-count">...</span> online members</p>
+                  <h3><i class="fa-brands fa-discord" style="color:#5865F2;"></i> Chat</h3>
+                  <p><span class="green-dot">●</span> <span id="discord-online-count">...</span> Online</p>
               </div>
-              <a href="#" id="discord-join-button" class="discord-btn" target="_blank" rel="noopener noreferrer nofollow">Join Now</a>
+              <a href="#" id="discord-join-button" class="discord-btn" target="_blank" rel="noopener noreferrer nofollow">Join Chat</a>
           </div>
           <ul id="discord-members-list" class="members-list">
-              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
-              <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
               <li class="member-skeleton"><div class="avatar-skeleton"></div><div class="name-skeleton"></div></li>
           </ul>
         </div>
         
-        <!-- Vertical Ad Placeholder -->
-        <div class="ad-placeholder-vertical">
-            <a href="https://amzn.to/3JDrf3v" target="_blank" rel="nofollow noopener sponsored"><img src="https://raaj648.github.io/newstreampage/amazonvertical.webp"/></a>
-        </div>
       </aside>
     </div>
   </main>
 
   <footer>
     <div class="partners-section">
-      <h3>Our Network</h3>
+      <h3>Trusted Partners</h3>
       <div class="partners-grid">
-        <a href="https://buffstreams.world/" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Buffstreams</span></a>
-        <a href="https://sportsurge.shop/" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Sportsurge</span></a>
-        <a href="https://crackstreamse.shop/" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Crackstreams</span></a>
-        <a href="https://hesgoal2.world/" class="partner-card" target="_blank" rel="nofollow"><span class="partner-name">Hesgoal</span></a>
+        <a href="#" class="partner-logo dynamic-affiliate-link">1WIN</a>
+        <a href="#" class="partner-logo dynamic-affiliate-link">BET365</a>
+        <a href="#" class="partner-logo dynamic-affiliate-link">BETSSON</a>
+        <a href="#" class="partner-logo dynamic-affiliate-link">STAKE</a>
       </div>
     </div>
-    <p class="copyright">© 2025 Streameast V2. All rights reserved.</p>
+    <p class="copyright">© 2025 SportStream. All rights reserved.</p>
   </footer>
 
-  <!-- Mobile-Only App Download Ad -->
+  <!-- Mobile-Only App Download Ad (STATIC LINK) -->
   <div id="sticky-footer-ad">
     <div class="ad-content">
         <span class="emoji">📲</span>
-        <span class="cta-text">Get the App!</span>
+        <span class="cta-text">Install App</span>
+        <!-- Fixed Link: Not Dynamic -->
         <a href="https://tinyurl.com/streameastv2" class="download-btn" rel="nofollow" target="_blank">⬇ Download</a>
     </div>
     <span id="close-ad" class="close-ad-btn">&#10060;</span>
   </div>
 
-  <!-- Desktop-Only Sticky Ad -->
+  <!-- Desktop-Only Sticky Ad (STATIC LINK) -->
   <div id="desktop-sticky-ad">
     <div class="ad-content">
-        <span class="emoji">⭐</span>
-        <span class="cta-text">Your Premier Destination for HD Sports Streams!</span>
-        <a href="https://amzn.to/3JDrf3v" class="download-btn" target="_blank" rel="nofollow sponsored">Explore Now!</a>
+        <i class="fa-brands fa-amazon" style="font-size:24px; margin-right:10px;"></i>
+        <span class="cta-text">Live Sports on Prime</span>
+        <!-- Fixed Link: Not Dynamic -->
+        <a href="https://amzn.to/3JDrf3v" class="download-btn" target="_blank" rel="nofollow sponsored">Watch Free</a>
     </div>
     <span id="close-desktop-ad" class="close-ad-btn">&#10060;</span>
   </div>
@@ -135,9 +201,3 @@
   <script src="script.js" defer></script>
 </body>
 </html>
-
-
-
-
-
-
