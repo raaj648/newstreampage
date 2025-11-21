@@ -1,11 +1,107 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- CONFIGURATION ---
+  
+  // ==================================================
+  // 1. ADVANCED GEO-TARGETING & AFFILIATE LOGIC
+  // ==================================================
+
+  // PART A: Base Lists per Country
+  // If a user is from "US", they get randomly assigned one of these.
+  const OFFERS_BY_COUNTRY = {
+    "US": [
+        "https://offer1.com/usa", 
+        "https://offer2.com/usa", 
+        "https://offer3.com/usa"
+    ],
+    "GB": [
+        "https://offer1.com/uk", 
+        "https://offer2.com/uk"
+    ],
+    "CA": [
+        "https://offer1.com/ca"
+    ],
+    "BR": [
+        "https://offer-brazil-local.com"
+    ],
+    "Global": [
+        "https://smart-link-global.com",
+		"https://smart-link-global2.com",
+		"https://smart-link-global3.com"
+    ]
+  };
+
+  // PART B: Cross-Border Rules
+  // Specific links that can ALSO work in other countries.
+  // Format: "Link URL": ["CountryCode1", "CountryCode2"]
+  const CROSS_BORDER_RULES = {
+    "https://offer3.com/usa": ["BR", "PE", "CO"], // This US link also works in Brazil, Peru, Colombia
+    "https://offer1.com/ca": ["FR", "BE"]         // This Canada link also works in France, Belgium
+  };
+
+  async function getSmartAffiliateLink() {
+    let userCountry = "Global"; 
+
+    // 1. Detect Country
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      const data = await res.json();
+      if(data && data.country_code) {
+        userCountry = data.country_code.toUpperCase(); // e.g., "US", "BR"
+      }
+    } catch (e) {
+      console.log("Geo-detection failed, defaulting to Global.");
+    }
+
+    // 2. Build the Pool of Available Links for this Country
+    let linkPool = [];
+
+    // A. Add Local Offers if they exist
+    if (OFFERS_BY_COUNTRY[userCountry]) {
+        linkPool = linkPool.concat(OFFERS_BY_COUNTRY[userCountry]);
+    }
+
+    // B. Check Cross-Border Rules
+    // If the detected country is in the list for a specific link, add that link to the pool
+    for (const [linkUrl, allowedCountries] of Object.entries(CROSS_BORDER_RULES)) {
+        if (allowedCountries.includes(userCountry)) {
+            linkPool.push(linkUrl);
+        }
+    }
+
+    // C. Fallback if pool is empty -> Use Global List
+    if (linkPool.length === 0) {
+        linkPool = OFFERS_BY_COUNTRY["Global"];
+    }
+
+    // 3. Select Random Link from the Pool
+    const randomIndex = Math.floor(Math.random() * linkPool.length);
+    return linkPool[randomIndex];
+  }
+
+  async function updateAdLinks() {
+    const finalLink = await getSmartAffiliateLink();
+    window.currentAffiliateLink = finalLink; // Store for In-Feed Ad
+
+    // Update all dynamic elements (EXCEPT FOOTER)
+    const adElements = document.querySelectorAll('.dynamic-affiliate-link');
+    adElements.forEach(el => {
+        el.href = finalLink;
+    });
+  }
+
+  // Initialize Ads immediately
+  updateAdLinks();
+  initOverlayAd();
+
+
+  // ==================================================
+  // 2. EXISTING CORE FUNCTIONALITY (PRESERVED)
+  // ==================================================
+
   const API_URL = "https://topembed.pw/api.php?format=json";
   const DISCORD_SERVER_ID = "1422384816472457288";
   const CACHE_KEY = 'apiDataCache';
   const CACHE_DURATION_MINUTES = 5;
 
-  // --- PAGE ELEMENTS ---
   const pageTitle = document.querySelector("title"),
         streamPlayer = document.getElementById("stream-player"),
         playerContainer = document.querySelector(".video-player-container"),
@@ -15,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
         countdownContainer = document.getElementById("countdown-container"),
         matchStartTimeEl = document.getElementById("match-start-time"),
         streamLinksGrid = document.getElementById("stream-links-grid"),
-        // Ad Elements
         closeAdBtn = document.getElementById("close-ad"),
         stickyAd = document.getElementById("sticky-footer-ad"),
         closeDesktopAdBtn = document.getElementById("close-desktop-ad"),
@@ -23,14 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let countdownInterval;
 
-  // --- CORE FUNCTIONS ---
-
   function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     const matchId = params.get('id');
     const streamUrl = params.get('stream');
     if (!matchId || !streamUrl) {
-      displayError("Invalid URL", "Match ID or Stream URL is missing from the address.");
+      displayError("Invalid URL", "Match ID or Stream URL is missing.");
       throw new Error("Invalid URL parameters.");
     }
     return { matchId, streamUrl };
@@ -45,13 +138,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     try {
       const response = await fetch(API_URL);
-      if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+      if (!response.ok) throw new Error(`API request failed`);
       const data = await response.json();
-      const cachePayload = { timestamp: now, data: data };
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify(cachePayload));
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: now, data: data }));
       return data;
     } catch (error) {
-      displayError("API Error", "Could not fetch match data from the server.");
+      displayError("API Error", "Could not fetch match data.");
       throw error;
     }
   }
@@ -128,15 +220,33 @@ document.addEventListener("DOMContentLoaded", () => {
       const isGeneric = /^(ex)?\d{3,}$/.test(lastPart);
       if (isGeneric || !lastPart) return `Channel ${index + 1}`;
       return decodeURIComponent(lastPart);
-    } catch (e) {
-      return `Channel ${index + 1}`;
-    }
+    } catch (e) { return `Channel ${index + 1}`; }
   }
   
+  // Create the Native In-Feed Ad
+  function createInFeedAd() {
+    const adDiv = document.createElement('div');
+    adDiv.className = 'stream-infeed-ad';
+    adDiv.innerHTML = `
+        <a href="${window.currentAffiliateLink || '#'}" target="_blank" class="infeed-content dynamic-affiliate-link">
+            <div class="infeed-left">
+                <span class="rec-tag"><i class="fa-solid fa-star"></i> REC</span>
+                <span style="font-weight:bold;">High Speed Server</span>
+            </div>
+            <div class="infeed-btn">Watch <i class="fa-solid fa-play"></i></div>
+        </a>
+    `;
+    return adDiv;
+  }
+
   function renderChannelList(channels, currentStreamUrl, matchId) {
     streamLinksGrid.innerHTML = "";
+    
+    // Inject Ad First
+    streamLinksGrid.appendChild(createInFeedAd());
+
     if (!channels || channels.length === 0) {
-      streamLinksGrid.innerHTML = "<p>No other stream channels are available for this match.</p>";
+      // Only show ad if no channels
       return;
     }
 
@@ -145,28 +255,23 @@ document.addEventListener("DOMContentLoaded", () => {
     channelUrls.forEach((channelUrl, index) => {
       const channelName = getChannelName(channelUrl, index);
       const link = document.createElement("a");
-
       link.className = "stream-link";
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-
       link.href = `${window.location.origin}${window.location.pathname}?id=${matchId}&stream=${encodeURIComponent(channelUrl)}`;
-
-      const newTabIcon = `<svg class="new-tab-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>`;
 
       let buttonText = "Switch";
       if (channelUrl === currentStreamUrl) {
         link.classList.add("active");
-        buttonText = "▶ Running";
+        buttonText = "Running";
       }
 
       link.innerHTML = `
         <div class="stream-link-content">
-          <span class="stream-info">${channelName} ${newTabIcon}</span>
+          <span class="stream-info">${channelName}</span>
           <span class="watch-now-btn">${buttonText}</span>
         </div>
       `;
-
       streamLinksGrid.appendChild(link);
     });
   }
@@ -178,59 +283,59 @@ document.addEventListener("DOMContentLoaded", () => {
     matchStatusBadge.className = "status-badge finished";
     playerContainer.style.display = 'none';
     countdownContainer.style.display = 'none';
-    streamLinksGrid.innerHTML = `<p style="text-align: center; color: #ff8c00;">${message}. Please select another match.</p>`;
+    streamLinksGrid.innerHTML = `<p style="text-align: center;">${message}</p>`;
   }
 
   async function loadDiscordWidget() {
     if (!DISCORD_SERVER_ID) return;
     try {
       const response = await fetch(`https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`);
-      if (!response.ok) throw new Error('Failed to fetch Discord widget data');
+      if (!response.ok) throw new Error('Failed');
       const data = await response.json();
       document.getElementById("discord-online-count").textContent = data.presence_count || '0';
       if (data.instant_invite) document.getElementById("discord-join-button").href = data.instant_invite;
+      
       const membersListEl = document.getElementById("discord-members-list");
       membersListEl.innerHTML = '';
       if (data.members && data.members.length > 0) {
-        data.members.slice(0, 3).forEach(member => {
+        data.members.slice(0, 5).forEach(member => {
           const li = document.createElement('li');
-          li.innerHTML = `<div class="member-avatar"><img src="${member.avatar_url}" alt="${member.username}"><span class="online-indicator"></span></div><span class="member-name">${member.username}</span>`;
+          li.innerHTML = `
+            <div class="member-wrapper">
+                <img class="member-avatar" src="${member.avatar_url}" alt="${member.username}">
+                <span class="member-status"></span>
+            </div>
+            <span class="member-name">${member.username}</span>
+          `;
           membersListEl.appendChild(li);
         });
-        if (data.instant_invite && data.members.length > 3) {
-            const moreLi = document.createElement('li');
-            moreLi.className = 'more-members-link';
-            moreLi.innerHTML = `<p>and ${data.members.length - 3} more in our <a href="${data.instant_invite}" target="_blank" rel="noopener noreferrer nofollow">Discord!</a></p>`;
-            membersListEl.appendChild(moreLi);
-        }
-      } else {
-         membersListEl.innerHTML = '<li>No members to display.</li>';
       }
-    } catch (error) {
-      console.error("Error loading Discord widget:", error);
-      const discordWidget = document.getElementById("discord-widget-container");
-      if (discordWidget) discordWidget.style.display = 'none';
-    }
+    } catch (error) { console.log("Discord Error"); }
+  }
+
+  function initOverlayAd() {
+      const overlay = document.getElementById('video-overlay-ad');
+      if(overlay) {
+          overlay.addEventListener('click', () => {
+              window.open(window.currentAffiliateLink || '#', '_blank');
+              overlay.style.opacity = '0';
+              setTimeout(() => { overlay.style.display = 'none'; }, 300);
+          });
+      }
   }
 
   function setupAdEventListeners() {
-    // Mobile Ad
     if (closeAdBtn && stickyAd) {
-      closeAdBtn.addEventListener("click", () => { 
-        stickyAd.style.display = "none"; 
-      });
+      closeAdBtn.addEventListener("click", () => { stickyAd.style.display = "none"; });
     }
-    // Desktop Ad
     if (closeDesktopAdBtn && desktopStickyAd) {
-      closeDesktopAdBtn.addEventListener("click", () => {
-        desktopStickyAd.style.display = "none";
-      });
+      closeDesktopAdBtn.addEventListener("click", () => { desktopStickyAd.style.display = "none"; });
     }
   }
 
   async function initializePage() {
     try {
-      setupAdEventListeners(); // Set up ad close buttons
+      setupAdEventListeners();
       const { matchId, streamUrl } = getUrlParams();
       streamPlayer.src = streamUrl;
 
@@ -246,10 +351,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const channelData = match.channels.channel || match.channels || [];
         renderChannelList(channelData, streamUrl, matchId);
       } else {
-        displayError("Match Not Found", "The requested match could not be found in the schedule.");
+        displayError("Match Not Found", "The requested match could not be found.");
       }
     } catch (error) {
-      console.error("Page initialization failed:", error);
+      console.error("Init failed:", error);
     }
   }
 
