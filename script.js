@@ -35,37 +35,37 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://record.betsson.com/_Ipto0Q-i5zR7HLc7-ZUbAGNd7ZgqdRLk/1/": ["AR", "BR", "CO", "GR"]
   };
 
-  // --- NEW: HIGH TRAFFIC GEO-DETECTION (CLOUDFLARE METHOD) ---
+  // --- NEW: HIGH TRAFFIC GEO-DETECTION (GITHUB PAGES OPTIMIZED - OPTION A) ---
   async function getHighTrafficCountry() {
+    
+    // Method 1: GeoJS (Primary)
+    // Pros: Currently unlimited free requests (Client-side), Fast, CORS-friendly.
     try {
-        // Method 1: Cloudflare Trace (Unlimited, Fast, Free)
-        // This works because Cloudflare exposes this text file on their edge nodes.
-        const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
-        const text = await response.text();
-        
-        // Parse the text response which looks like "h=... ip=... loc=US ..."
-        const data = text.trim().split('\n').reduce(function(obj, pair) {
-            const parts = pair.split('=');
-            obj[parts[0]] = parts[1];
-            return obj;
-        }, {});
-
-        if (data.loc) {
-            return data.loc.toUpperCase(); // Returns "US", "BD", "GB" etc.
+        // We add a timestamp to prevent browser caching stale results
+        const res = await fetch('https://get.geojs.io/v1/ip/country.json?_=' + new Date().getTime());
+        if (!res.ok) throw new Error('GeoJS error');
+        const data = await res.json();
+        if (data.country) {
+            return data.country.toUpperCase();
         }
     } catch (e) {
-        console.warn("Cloudflare trace failed, trying backup...");
+        console.warn("GeoJS failed, switching to backup...");
     }
 
-    // Method 2: Backup (GeoJS - lighter weight than ipapi)
+    // Method 2: Country.is (Backup)
+    // Pros: Hosted on Cloudflare, highly scalable API for static sites.
     try {
-        const res = await fetch('https://get.geojs.io/v1/ip/country.json');
+        const res = await fetch('https://api.country.is');
+        if (!res.ok) throw new Error('Country.is error');
         const data = await res.json();
-        if(data.country) return data.country.toUpperCase();
+        if (data.country) {
+            return data.country.toUpperCase();
+        }
     } catch (e) {
         console.error("All Geo methods failed.");
     }
 
+    // Default Fallback
     return "Global";
   }
 
@@ -381,6 +381,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
-
-
-
