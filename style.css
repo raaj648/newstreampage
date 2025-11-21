@@ -144,11 +144,11 @@ main { padding: 1.5rem 1rem; }
 
 /* ====== DISCORD WIDGET ====== */
 #discord-widget-container { background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 0; overflow: hidden; }
-.discord-header { background: #202225; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
+.discord-header { background: #0d131f; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
 .header-text h3 { font-size: 14px; font-weight: 800; color: #fff; margin: 0 0 2px 0; }
 .green-dot { color: #2ecc71; font-size: 10px; animation: blink 2s infinite; }
 .discord-btn { background-color: #5865F2; color: #fff; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 11px; }
-.members-list { list-style: none; padding: 10px; background: #2f3136; margin: 0; }
+.members-list { list-style: none; padding: 10px; background: var(--bg-secondary); margin: 0; }
 .members-list li { display: flex; align-items: center; padding: 6px; border-radius: 4px; transition: background 0.2s; }
 .members-list li:hover { background: rgba(255,255,255,0.05); }
 .member-wrapper { position: relative; width: 30px; height: 30px; margin-right: 10px; }
@@ -200,4 +200,5 @@ footer { background: #1a1a2e; margin-top: 2rem; padding: 2rem 1rem; border-top: 
   #sticky-footer-ad { display: flex; }
   #desktop-sticky-ad { display: none; }
 }
+
 
