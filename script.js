@@ -11,8 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "https://record.webpartners.co/_QUm2k2WIfIoBfkWNuc6vQmNd7ZgqdRLk/1/"
     ],
     "GB": [
-        "https://amzn.to/44dBQJe", 
-        "https://amzn.to/44dBQJe"
+        "https://www.effectivegatecpm.com/mwvtqzkj?key=daf26372fb52174ce25eca816951dd61"
     ],
     "CA": [
          "https://record.betsson.com/_Ipto0Q-i5zSwcAgXsjz1uGNd7ZgqdRLk/1/",
@@ -380,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
 
 
 
