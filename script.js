@@ -23,8 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ],
     // Fallback for everyone else
     "Global": [
-        "https://www.effectivegatecpm.com/mwvtqzkj?key=daf26372fb52174ce25eca816951dd61",
-        "https://1wksrw.com/?open=register&p=h8zt"
+        "https://www.effectivegatecpm.com/mwvtqzkj?key=daf26372fb52174ce25eca816951dd61"
     ]
   };
 
@@ -381,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
 
 
 
