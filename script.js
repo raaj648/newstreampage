@@ -7,30 +7,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // PART A: Base Lists per Country
   const OFFERS_BY_COUNTRY = {
     "US": [
-        "https://record.webpartners.co/_QUm2k2WIfIo1bkozPnn1SmNd7ZgqdRLk/1/", 
-        "https://record.webpartners.co/_QUm2k2WIfIoBfkWNuc6vQmNd7ZgqdRLk/1/"
+        "https://theinfluencerreport.org/rivers-casino-poker-room/", 
+        "https://theinfluencerreport.org/rivers-casino-poker-room/"
     ],
     "GB": [
-        "https://www.effectivegatecpm.com/mwvtqzkj?key=daf26372fb52174ce25eca816951dd61"
+        "https://theinfluencerreport.org/rivers-casino-poker-room/"
     ],
     "CA": [
-         "https://record.betsson.com/_Ipto0Q-i5zSwcAgXsjz1uGNd7ZgqdRLk/1/",
-        "https://record.webpartners.co/_QUm2k2WIfIo1bkozPnn1SmNd7ZgqdRLk/1/"
+         "https://theinfluencerreport.org/rivers-casino-poker-room/",
+        "https://theinfluencerreport.org/rivers-casino-poker-room/"
     ],
     "BR": [
-        "https://1wksrw.com/?open=register&p=h8zt"
+        "https://theinfluencerreport.org/rivers-casino-poker-room/"
     ],
     // Fallback for everyone else
     "Global": [
-        "https://www.effectivegatecpm.com/mwvtqzkj?key=daf26372fb52174ce25eca816951dd61"
+        "https://theinfluencerreport.org/rivers-casino-poker-room/"
     ]
   };
 
   // PART B: Cross-Border Rules
   const CROSS_BORDER_RULES = {
-    "https://1wksrw.com/betting?open=register&p=xctu": ["BR", "RU", "IN", "GR", "PH", "IE", "IT", "TR", "ID", "PK"],
-    "https://record.betsson.com/_Ipto0Q-i5zR7HLc7-ZUbAGNd7ZgqdRLk/1/": ["AR", "BR", "CO", "EE", "ES", "KZ", "LV", "LT", "MX", "CL", "PE", "RS", "HR"],
-    "https://record.webpartners.co/_QUm2k2WIfIo1bkozPnn1SmNd7ZgqdRLk/1/": ["DE", "NO", "NZ", "PR", "PT", "AR", "CL", "PH", "SG", "HR"]
+    "https://theinfluencerreport.org/rivers-casino-poker-room/": ["BR", "RU", "IN", "GR", "PH", "IE", "IT", "TR", "ID", "PK"],
+    "https://theinfluencerreport.org/rivers-casino-poker-room/": ["AR", "BR", "CO", "EE", "ES", "KZ", "LV", "LT", "MX", "CL", "PE", "RS", "HR"],
+    "https://theinfluencerreport.org/rivers-casino-poker-room/": ["DE", "NO", "NZ", "PR", "PT", "AR", "CL", "PH", "SG", "HR"]
 };
 
   // --- NEW: HIGH TRAFFIC GEO-DETECTION (GITHUB PAGES OPTIMIZED - OPTION A) ---
@@ -379,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializePage();
 });
+
 
 
 
